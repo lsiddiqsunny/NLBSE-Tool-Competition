@@ -24,8 +24,8 @@ from tqdm.auto import tqdm
 # drive.mount('/content/drive')
 
 # %%
-if not os.path.isfile("github-labels-top3-803k-train.csv"):
-  !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-train.tar.gz" | tar -xz
+# if not os.path.isfile("github-labels-top3-803k-train.csv"):
+#   !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-train.tar.gz" | tar -xz
 
 df = pd.read_csv('github-labels-top3-803k-train.csv')
 
@@ -33,8 +33,8 @@ df = pd.read_csv('github-labels-top3-803k-train.csv')
 df.head()
 
 # %%
-if not os.path.isfile("github-labels-top3-803k-test.csv"):
-  !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-test.tar.gz" | tar -xz
+# if not os.path.isfile("github-labels-top3-803k-test.csv"):
+#   !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-test.tar.gz" | tar -xz
 
 testdf = pd.read_csv("github-labels-top3-803k-test.csv")
 testdf.groupby("issue_label").size()
