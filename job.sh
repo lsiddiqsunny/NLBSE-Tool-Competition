@@ -3,6 +3,5 @@
 #$ -m abe
 #$ -q long
 #$ -N nlbse 
-module load conda
 conda activate nlbse
 python3 ~/Public/NLBSE-Tool-Competition/code.py
