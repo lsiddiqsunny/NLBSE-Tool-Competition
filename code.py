@@ -195,7 +195,7 @@ optimizer = AdamW(model.parameters(),
                   eps=1e-8)
 
 # %%
-epochs = 5
+epochs = 50
 
 scheduler = get_linear_schedule_with_warmup(optimizer, 
                                             num_warmup_steps=0,
