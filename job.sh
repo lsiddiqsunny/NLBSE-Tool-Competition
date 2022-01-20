@@ -1,9 +1,8 @@
 #!/bin/bash
 #$ -M msiddiq3@nd.edu
 #$ -m abe
-#$ -q long           # Specify queue
-#$ -N nlbse       # Specify job name
-
+#$ -q long
+#$ -N nlbse 
 module load conda
 source activate nlbse
-python3 code.py
+python3 ~/Private/NLBSE-Tool-Competition/code.py
