@@ -17,6 +17,7 @@ import pandas as pd
 import gensim
 from tqdm.auto import tqdm
 
+print("Included Library")
 # %%
 # persistent file storage
 # https://colab.research.google.com/notebooks/io.ipynb
@@ -30,7 +31,7 @@ from tqdm.auto import tqdm
 df = pd.read_csv('github-labels-top3-803k-train.csv')
 
 # %%
-df.head()
+print(df.head())
 
 # %%
 # if not os.path.isfile("github-labels-top3-803k-test.csv"):
@@ -40,7 +41,7 @@ testdf = pd.read_csv("github-labels-top3-803k-test.csv")
 testdf.groupby("issue_label").size()
 
 # %%
-df['issue_label'].value_counts()
+print(df['issue_label'].value_counts())
 
 # %%
 possible_labels = df.issue_label.unique()
@@ -48,7 +49,7 @@ possible_labels = df.issue_label.unique()
 label_dict = {}
 for index, possible_label in enumerate(possible_labels):
     label_dict[possible_label] = index
-label_dict
+print(label_dict)
 
 # %%
 df['label'] = df.issue_label.replace(label_dict)
@@ -70,22 +71,22 @@ def preprocess(row):
 df['issue_data'] = df.apply(preprocess, axis=1)
 
 newDF = df[['issue_label','issue_data','label']]
-newDF.head()
+print(newDF.head())
 
 # %%
 df = newDF.copy()
-df.head()
+print(df.head())
 
 # %%
 
 testdf['issue_data'] = testdf.apply(preprocess, axis=1)
 
 newTestDF = testdf[['issue_label','issue_data','label']]
-newTestDF.head()
+print(newTestDF.head())
 
 # %%
 testdf = newTestDF.copy()
-testdf.head()
+print(testdf.head())
 
 # %%
 from sklearn.model_selection import train_test_split
@@ -123,6 +124,7 @@ input_ids_train = encoded_data_train['input_ids']
 attention_masks_train = encoded_data_train['attention_mask']
 labels_train = torch.tensor(df[df.data_type=='train'].label.values)
 
+print("Done train encoding")
 # %%
 encoded_data_val = tokenizer.batch_encode_plus(
     df[df.data_type=='val'].issue_data.values, 
@@ -137,6 +139,7 @@ input_ids_val = encoded_data_val['input_ids']
 attention_masks_val = encoded_data_val['attention_mask']
 labels_val = torch.tensor(df[df.data_type=='val'].label.values)
 
+print("Done val encoding")
 # %%
 encoded_data_test = tokenizer.batch_encode_plus(
     testdf.issue_data.values, 
@@ -151,13 +154,14 @@ input_ids_test= encoded_data_test['input_ids']
 attention_masks_test = encoded_data_test['attention_mask']
 labels_test= torch.tensor(testdf.label.values)
 
+print("Done test encoding")
 # %%
 dataset_train = TensorDataset(input_ids_train, attention_masks_train, labels_train)
 dataset_val = TensorDataset(input_ids_val, attention_masks_val, labels_val)
 dataset_test = TensorDataset(input_ids_test, attention_masks_test, labels_test)
 
 # %%
-len(dataset_train), len(dataset_val), len(dataset_test)
+print(len(dataset_train), len(dataset_val), len(dataset_test))
 
 # %%
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
@@ -197,6 +201,7 @@ scheduler = get_linear_schedule_with_warmup(optimizer,
                                             num_warmup_steps=0,
                                             num_training_steps=len(dataloader_train)*epochs)
 
+print("Startig training")
 # %%
 from sklearn.metrics import f1_score
 
