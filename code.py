@@ -28,7 +28,7 @@ print("Included Library")
 # if not os.path.isfile("github-labels-top3-803k-train.csv"):
 #   !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-train.tar.gz" | tar -xz
 
-df = pd.read_csv('~/Private/NLBSE-Tool-Competition/github-labels-top3-803k-train.csv')
+df = pd.read_csv('~/Public/NLBSE-Tool-Competition/github-labels-top3-803k-train.csv')
 
 # %%
 print(df.head())
@@ -37,7 +37,7 @@ print(df.head())
 # if not os.path.isfile("github-labels-top3-803k-test.csv"):
 #   !curl "https://tickettagger.blob.core.windows.net/datasets/github-labels-top3-803k-test.tar.gz" | tar -xz
 
-testdf = pd.read_csv("~/Private/NLBSE-Tool-Competition/github-labels-top3-803k-test.csv")
+testdf = pd.read_csv("~/Public/NLBSE-Tool-Competition/github-labels-top3-803k-test.csv")
 testdf.groupby("issue_label").size()
 
 # %%

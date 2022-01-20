@@ -5,4 +5,4 @@
 #$ -N nlbse 
 module load conda
 source activate nlbse
-python3 ~/Private/NLBSE-Tool-Competition/code.py
+python3 ~/Public/NLBSE-Tool-Competition/code.py
