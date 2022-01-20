@@ -1,6 +1,8 @@
 #!/bin/bash
 #$ -M msiddiq3@nd.edu
-#$ -m nlbse
+#$ -m abe
+#$ -q long           # Specify queue
+#$ -N nlbse       # Specify job name
 
 module load conda
 source activate nlbse
