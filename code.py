@@ -1,4 +1,4 @@
-# %% [markdown]
+#!/usr/bin/env python3
 # <a href="https://colab.research.google.com/github/lsiddiqsunny/NLBSE-Tool-Competition/blob/master/Text_Classification_With_BERT.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 # %%
