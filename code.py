@@ -236,6 +236,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
 
 print(device)
+if(device=='cpu'):
+    print("Using CPU")
+    exit(0)
 
 # %%
 def evaluate(dataloader_val):
