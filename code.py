@@ -330,7 +330,7 @@ model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
 model.to(device)
 
 # %%
-model.load_state_dict(torch.load('finetuned_BERT_epoch_1.model', map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('finetuned_BERT_epoch_10.model', map_location=device))
 
 # %%
 _, predictions, true_vals = evaluate(dataloader_test)
