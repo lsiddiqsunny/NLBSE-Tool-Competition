@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -M msiddiq3@nd.edu
 #$ -m abe
-#$ -q gpu
+#$ -q gpu-debug
 #$ -l gpu=1
 #$ -pe smp 1
 #$ -N nlbse 
