@@ -18,6 +18,19 @@ import gensim
 from tqdm.auto import tqdm
 
 print("Included Library")
+
+# %%
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
+print(device)
+if device.type == 'cuda':
+    print(torch.cuda.get_device_name(0))
+    print('Memory Usage:')
+    print('Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
+    print('Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
+else:
+    exit(0)
 # %%
 # persistent file storage
 # https://colab.research.google.com/notebooks/io.ipynb
@@ -232,18 +245,9 @@ torch.manual_seed(seed_val)
 torch.cuda.manual_seed_all(seed_val)
 
 # %%
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 model.to(device)
-
-print(device)
-if device.type == 'cuda':
-    print(torch.cuda.get_device_name(0))
-    print('Memory Usage:')
-    print('Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
-    print('Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
-else:
-    exit(0)
-
 # %%
 def evaluate(dataloader_val):
 
