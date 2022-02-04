@@ -1,19 +1,19 @@
 
 
+from sklearn.metrics import f1_score
+import gensim
+import pandas as pd
 import os
 import shutil
 
 import tensorflow as tf
 import tensorflow_hub as hub
-import tensorflow_text as text
 from official.nlp import optimization  # to create AdamW optimizer
 
 import matplotlib.pyplot as plt
 
 tf.get_logger().setLevel('ERROR')
 
-import pandas as pd
-import gensim
 
 print("Library loaded")
 df = pd.read_csv('github-labels-top3-803k-train.csv')
@@ -33,19 +33,22 @@ df['label'] = df.issue_label.replace(label_dict)
 testdf['label'] = testdf.issue_label.replace(label_dict)
 
 # preprocessing can be customized by participants
+
+
 def preprocess(row):
-  # concatenate title and body, then remove whitespaces
-  doc = ""
-  doc += str(row.issue_title)
-  doc += " "
-  doc += str(row.issue_body)
-  # https://radimrehurek.com/gensim/parsing/preprocessing.html
-  doc = gensim.parsing.preprocessing.strip_multiple_whitespaces(doc)
-  return doc
+    # concatenate title and body, then remove whitespaces
+    doc = ""
+    doc += str(row.issue_title)
+    doc += " "
+    doc += str(row.issue_body)
+    # https://radimrehurek.com/gensim/parsing/preprocessing.html
+    doc = gensim.parsing.preprocessing.strip_multiple_whitespaces(doc)
+    return doc
+
 
 df['issue_data'] = df.apply(preprocess, axis=1)
 
-newDF = df[['issue_label','issue_data','label']]
+newDF = df[['issue_label', 'issue_data', 'label']]
 print(newDF.head())
 
 df = newDF.copy()
@@ -53,16 +56,16 @@ print(df.head())
 
 testdf['issue_data'] = testdf.apply(preprocess, axis=1)
 
-newTestDF = testdf[['issue_label','issue_data','label']]
+newTestDF = testdf[['issue_label', 'issue_data', 'label']]
 print(newTestDF.head())
 
 testdf = newTestDF.copy()
 print(testdf.head())
 
-newpath = r'./nlbse/train' 
+newpath = r'./nlbse/train'
 if not os.path.exists(newpath):
     os.makedirs(newpath)
-newpath = r'./nlbse/test' 
+newpath = r'./nlbse/test'
 if not os.path.exists(newpath):
     os.makedirs(newpath)
 
@@ -125,29 +128,30 @@ test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
 """Let's take a look at a few reviews."""
 
 for text_batch, label_batch in train_ds.take(1):
-  for i in range(3):
-    print(f'Review: {text_batch.numpy()[i]}')
-    label = label_batch.numpy()[i]
-    print(f'Label : {label} ({class_names[label]})')
+    for i in range(3):
+        print(f'Review: {text_batch.numpy()[i]}')
+        label = label_batch.numpy()[i]
+        print(f'Label : {label} ({class_names[label]})')
 
-from sklearn.metrics import f1_score
 
 def f1_score_func(preds, labels):
     preds_flat = np.argmax(preds, axis=1).flatten()
     labels_flat = labels.flatten()
     return f1_score(labels_flat, preds_flat, average='weighted')
 
+
 def accuracy_per_class(preds, labels):
     label_dict_inverse = {v: k for k, v in label_dict.items()}
-    
+
     preds_flat = np.argmax(preds, axis=1).flatten()
     labels_flat = labels.flatten()
 
     for label in np.unique(labels_flat):
-        y_preds = preds_flat[labels_flat==label]
-        y_true = labels_flat[labels_flat==label]
+        y_preds = preds_flat[labels_flat == label]
+        y_true = labels_flat[labels_flat == label]
         print(f'Class: {label_dict_inverse[label]}')
         print(f'Accuracy: {len(y_preds[y_preds==label])}/{len(y_true)}\n')
+
 
 """## Loading models from TensorFlow Hub
 
@@ -172,9 +176,9 @@ Aside from the models available below, there are [multiple versions](https://tfh
 You'll see in the code below that switching the tfhub.dev URL is enough to try any of these models, because all the differences between them are encapsulated in the SavedModels from TF Hub.
 """
 
-#@title Choose a BERT model to fine-tune
+# @title Choose a BERT model to fine-tune
 
-bert_model_name = 'small_bert/bert_en_uncased_L-4_H-512_A-8'  #@param ["bert_en_uncased_L-12_H-768_A-12", "bert_en_cased_L-12_H-768_A-12", "bert_multi_cased_L-12_H-768_A-12", "small_bert/bert_en_uncased_L-2_H-128_A-2", "small_bert/bert_en_uncased_L-2_H-256_A-4", "small_bert/bert_en_uncased_L-2_H-512_A-8", "small_bert/bert_en_uncased_L-2_H-768_A-12", "small_bert/bert_en_uncased_L-4_H-128_A-2", "small_bert/bert_en_uncased_L-4_H-256_A-4", "small_bert/bert_en_uncased_L-4_H-512_A-8", "small_bert/bert_en_uncased_L-4_H-768_A-12", "small_bert/bert_en_uncased_L-6_H-128_A-2", "small_bert/bert_en_uncased_L-6_H-256_A-4", "small_bert/bert_en_uncased_L-6_H-512_A-8", "small_bert/bert_en_uncased_L-6_H-768_A-12", "small_bert/bert_en_uncased_L-8_H-128_A-2", "small_bert/bert_en_uncased_L-8_H-256_A-4", "small_bert/bert_en_uncased_L-8_H-512_A-8", "small_bert/bert_en_uncased_L-8_H-768_A-12", "small_bert/bert_en_uncased_L-10_H-128_A-2", "small_bert/bert_en_uncased_L-10_H-256_A-4", "small_bert/bert_en_uncased_L-10_H-512_A-8", "small_bert/bert_en_uncased_L-10_H-768_A-12", "small_bert/bert_en_uncased_L-12_H-128_A-2", "small_bert/bert_en_uncased_L-12_H-256_A-4", "small_bert/bert_en_uncased_L-12_H-512_A-8", "small_bert/bert_en_uncased_L-12_H-768_A-12", "albert_en_base", "electra_small", "electra_base", "experts_pubmed", "experts_wiki_books", "talking-heads_base"]
+bert_model_name = 'small_bert/bert_en_uncased_L-4_H-512_A-8'  # @param ["bert_en_uncased_L-12_H-768_A-12", "bert_en_cased_L-12_H-768_A-12", "bert_multi_cased_L-12_H-768_A-12", "small_bert/bert_en_uncased_L-2_H-128_A-2", "small_bert/bert_en_uncased_L-2_H-256_A-4", "small_bert/bert_en_uncased_L-2_H-512_A-8", "small_bert/bert_en_uncased_L-2_H-768_A-12", "small_bert/bert_en_uncased_L-4_H-128_A-2", "small_bert/bert_en_uncased_L-4_H-256_A-4", "small_bert/bert_en_uncased_L-4_H-512_A-8", "small_bert/bert_en_uncased_L-4_H-768_A-12", "small_bert/bert_en_uncased_L-6_H-128_A-2", "small_bert/bert_en_uncased_L-6_H-256_A-4", "small_bert/bert_en_uncased_L-6_H-512_A-8", "small_bert/bert_en_uncased_L-6_H-768_A-12", "small_bert/bert_en_uncased_L-8_H-128_A-2", "small_bert/bert_en_uncased_L-8_H-256_A-4", "small_bert/bert_en_uncased_L-8_H-512_A-8", "small_bert/bert_en_uncased_L-8_H-768_A-12", "small_bert/bert_en_uncased_L-10_H-128_A-2", "small_bert/bert_en_uncased_L-10_H-256_A-4", "small_bert/bert_en_uncased_L-10_H-512_A-8", "small_bert/bert_en_uncased_L-10_H-768_A-12", "small_bert/bert_en_uncased_L-12_H-128_A-2", "small_bert/bert_en_uncased_L-12_H-256_A-4", "small_bert/bert_en_uncased_L-12_H-512_A-8", "small_bert/bert_en_uncased_L-12_H-768_A-12", "albert_en_base", "electra_small", "electra_base", "experts_pubmed", "experts_wiki_books", "talking-heads_base"]
 
 map_name_to_handle = {
     'bert_en_uncased_L-12_H-768_A-12':
@@ -380,16 +384,20 @@ You will create a very simple fine-tuned model, with the preprocessing model, th
 Note: for more information about the base model's input and output you can follow the model's URL for documentation. Here specifically, you don't need to worry about it because the preprocessing model will take care of that for you.
 """
 
+
 def build_classifier_model():
-  text_input = tf.keras.layers.Input(shape=(), dtype=tf.string, name='text')
-  preprocessing_layer = hub.KerasLayer(tfhub_handle_preprocess, name='preprocessing')
-  encoder_inputs = preprocessing_layer(text_input)
-  encoder = hub.KerasLayer(tfhub_handle_encoder, trainable=True, name='BERT_encoder')
-  outputs = encoder(encoder_inputs)
-  net = outputs['pooled_output']
-  net = tf.keras.layers.Dropout(0.1)(net)
-  net = tf.keras.layers.Dense(3, activation=None, name='classifier')(net)
-  return tf.keras.Model(text_input, net)
+    text_input = tf.keras.layers.Input(shape=(), dtype=tf.string, name='text')
+    preprocessing_layer = hub.KerasLayer(
+        tfhub_handle_preprocess, name='preprocessing')
+    encoder_inputs = preprocessing_layer(text_input)
+    encoder = hub.KerasLayer(tfhub_handle_encoder,
+                             trainable=True, name='BERT_encoder')
+    outputs = encoder(encoder_inputs)
+    net = outputs['pooled_output']
+    net = tf.keras.layers.Dropout(0.1)(net)
+    net = tf.keras.layers.Dense(3, activation=None, name='classifier')(net)
+    return tf.keras.Model(text_input, net)
+
 
 """Let's check that the model runs with the output of the preprocessing model."""
 
