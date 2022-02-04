@@ -6,4 +6,4 @@
 #$ -pe smp 1
 #$ -N nlbse 
 conda activate nlbse
-python3 ~/Public/NLBSE-Tool-Competition/code.py
+python3 ~/Public/NLBSE-Tool-Competition/code_torch.py
