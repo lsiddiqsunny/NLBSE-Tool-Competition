@@ -17,6 +17,8 @@ import pandas as pd
 import gensim
 from tqdm.auto import tqdm
 
+from transformers import AdamW, get_linear_schedule_with_warmup
+
 print("Included Library")
 
 # %%
@@ -201,7 +203,6 @@ dataloader_test = DataLoader(dataset_test,
                                    batch_size=batch_size)
 
 # %%
-from transformers import AdamW, get_linear_schedule_with_warmup
 
 optimizer = AdamW(model.parameters(),
                   lr=1e-5, 
