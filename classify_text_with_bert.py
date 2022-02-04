@@ -16,78 +16,78 @@ tf.get_logger().setLevel('ERROR')
 
 
 print("Library loaded")
-df = pd.read_csv('github-labels-top3-803k-train.csv')
+# df = pd.read_csv('github-labels-top3-803k-train.csv')
 
-print(df.head())
-testdf = pd.read_csv("github-labels-top3-803k-test.csv")
-testdf.groupby("issue_label").size()
+# print(df.head())
+# testdf = pd.read_csv("github-labels-top3-803k-test.csv")
+# testdf.groupby("issue_label").size()
 
-possible_labels = df.issue_label.unique()
+# possible_labels = df.issue_label.unique()
 
-label_dict = {}
-for index, possible_label in enumerate(possible_labels):
-    label_dict[possible_label] = index
-print(label_dict)
+# label_dict = {}
+# for index, possible_label in enumerate(possible_labels):
+#     label_dict[possible_label] = index
+# print(label_dict)
 
-df['label'] = df.issue_label.replace(label_dict)
-testdf['label'] = testdf.issue_label.replace(label_dict)
+# df['label'] = df.issue_label.replace(label_dict)
+# testdf['label'] = testdf.issue_label.replace(label_dict)
 
-# preprocessing can be customized by participants
-
-
-def preprocess(row):
-    # concatenate title and body, then remove whitespaces
-    doc = ""
-    doc += str(row.issue_title)
-    doc += " "
-    doc += str(row.issue_body)
-    # https://radimrehurek.com/gensim/parsing/preprocessing.html
-    doc = gensim.parsing.preprocessing.strip_multiple_whitespaces(doc)
-    return doc
+# # preprocessing can be customized by participants
 
 
-df['issue_data'] = df.apply(preprocess, axis=1)
+# def preprocess(row):
+#     # concatenate title and body, then remove whitespaces
+#     doc = ""
+#     doc += str(row.issue_title)
+#     doc += " "
+#     doc += str(row.issue_body)
+#     # https://radimrehurek.com/gensim/parsing/preprocessing.html
+#     doc = gensim.parsing.preprocessing.strip_multiple_whitespaces(doc)
+#     return doc
 
-newDF = df[['issue_label', 'issue_data', 'label']]
-print(newDF.head())
 
-df = newDF.copy()
-print(df.head())
+# df['issue_data'] = df.apply(preprocess, axis=1)
 
-testdf['issue_data'] = testdf.apply(preprocess, axis=1)
+# newDF = df[['issue_label', 'issue_data', 'label']]
+# print(newDF.head())
 
-newTestDF = testdf[['issue_label', 'issue_data', 'label']]
-print(newTestDF.head())
+# df = newDF.copy()
+# print(df.head())
 
-testdf = newTestDF.copy()
-print(testdf.head())
+# testdf['issue_data'] = testdf.apply(preprocess, axis=1)
 
-newpath = r'./nlbse/train'
-if not os.path.exists(newpath):
-    os.makedirs(newpath)
-newpath = r'./nlbse/test'
-if not os.path.exists(newpath):
-    os.makedirs(newpath)
+# newTestDF = testdf[['issue_label', 'issue_data', 'label']]
+# print(newTestDF.head())
 
-df = df.reset_index()  # make sure indexes pair with number of rows
-for index, row in df.iterrows():
-    label = row['issue_label']
-    data = row['issue_data']
-    newpath = r'./nlbse/train/'+str(label)
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-    with open(newpath+"/"+str(index)+'.txt', 'w') as f:
-        f.write(data)
+# testdf = newTestDF.copy()
+# print(testdf.head())
 
-testdf = testdf.reset_index()  # make sure indexes pair with number of rows
-for index, row in testdf.iterrows():
-    label = row['issue_label']
-    data = row['issue_data']
-    newpath = r'./nlbse/test/'+str(label)
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-    with open(newpath+"/"+str(index)+'.txt', 'w') as f:
-        f.write(data)
+# newpath = r'./nlbse/train'
+# if not os.path.exists(newpath):
+#     os.makedirs(newpath)
+# newpath = r'./nlbse/test'
+# if not os.path.exists(newpath):
+#     os.makedirs(newpath)
+
+# df = df.reset_index()  # make sure indexes pair with number of rows
+# for index, row in df.iterrows():
+#     label = row['issue_label']
+#     data = row['issue_data']
+#     newpath = r'./nlbse/train/'+str(label)
+#     if not os.path.exists(newpath):
+#         os.makedirs(newpath)
+#     with open(newpath+"/"+str(index)+'.txt', 'w') as f:
+#         f.write(data)
+
+# testdf = testdf.reset_index()  # make sure indexes pair with number of rows
+# for index, row in testdf.iterrows():
+#     label = row['issue_label']
+#     data = row['issue_data']
+#     newpath = r'./nlbse/test/'+str(label)
+#     if not os.path.exists(newpath):
+#         os.makedirs(newpath)
+#     with open(newpath+"/"+str(index)+'.txt', 'w') as f:
+#         f.write(data)
 
 """Next, you will use the `text_dataset_from_directory` utility to create a labeled `tf.data.Dataset`.
 
