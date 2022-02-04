@@ -101,7 +101,7 @@ batch_size = 128
 seed = 42
 
 raw_train_ds = tf.keras.utils.text_dataset_from_directory(
-    'nlbse/train',
+    '~/Public/NLBSE-Tool-Competition/content/nlbse/train',
     batch_size=batch_size,
     validation_split=0.2,
     subset='training',
@@ -111,7 +111,7 @@ class_names = raw_train_ds.class_names
 train_ds = raw_train_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 val_ds = tf.keras.utils.text_dataset_from_directory(
-    'nlbse/train',
+   '~/Public/NLBSE-Tool-Competition/content/nlbse/train',
     batch_size=batch_size,
     validation_split=0.2,
     subset='validation',
@@ -120,7 +120,7 @@ val_ds = tf.keras.utils.text_dataset_from_directory(
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 test_ds = tf.keras.utils.text_dataset_from_directory(
-    'nlbse/test',
+   '~/Public/NLBSE-Tool-Competition/content/nlbse/test',
     batch_size=batch_size)
 
 test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
